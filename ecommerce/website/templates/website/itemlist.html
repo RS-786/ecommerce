@@ -1,0 +1,8 @@
+{% extends "website/layout.html" %}
+
+{% block body %}
+<div>All items:</div>
+{% for item in items %}
+<p>{{item}}</p>
+{% endfor %}
+{% endblock %}
