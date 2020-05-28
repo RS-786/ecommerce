@@ -3,6 +3,11 @@
 {% block body %}
 <!-- Page Preloder -->
     <!-- Page Add Section Begin -->
+{% if messages %}
+    {% for message in messages %}
+    <div>{{message}}</div>
+    {% endfor %}
+{% endif %}
     <section class="page-add cart-page-add">
         <div class="container">
             <div class="row">
@@ -37,22 +42,23 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {% for item in object_list %}
                         <tr>
                             <td class="product-col">
-                                <img src="static/img/product/product-1.jpg" alt="">
+                                <img src="static/img/product/{{item.item.title}}1.jpg" alt="">
                                 <div class="p-title">
-                                    <h5>Blue Dotted Shirt</h5>
+                                    <h5>{{item.item.title}}</h5>
                                 </div>
                             </td>
-                            <td class="price-col">$29</td>
+                            <td class="price-col">${{item.item.price}}</td>
                             <td class="quantity-col">
-                                <div class="pro-qty">
-                                    <input type="text" value="1">
-                                </div>
+                                <div>{{item.quantity}}</div>
                             </td>
-                            <td class="total">$29</td>
-                            <td class="product-close">x</td>
+                            <td class="total">{{item.item.price}}</td>
+                            <td class="product-close">
+                                <a href="{{item.item.get_remove_from_cart_url}}">X</a></td>
                         </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -60,7 +66,7 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="coupon-input">
-                            <input type="text" placeholder="Enter cupone code">
+                            <input type="text" placeholder="Enter coupon code">
                         </div>
                     </div>
                     <div class="col-lg-5 offset-lg-1 text-left text-lg-right">

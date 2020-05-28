@@ -4,7 +4,7 @@ from django_mysql.models import ListCharField
 from django.shortcuts import reverse
 
 STATUS_CHOICES = (
-    ('N',''),
+    ('N','new'),
     ('P','popular'),
     ('S','sale')
 )
@@ -42,6 +42,10 @@ class Item(models.Model):
             'slug': self.slug
         })
 
+    def get_remove_from_cart_url(self):
+        return reverse("remove-from-cart",kwargs={
+            'slug': self.slug
+        })
 
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
@@ -49,7 +53,8 @@ class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete= models.CASCADE)
     quantity = models.IntegerField(default=1)
     def __str__(self):
-        return f"{self.quantity} of {self.item.title}"
+        return f"{self.item.title} x {self.quantity}"
+
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)

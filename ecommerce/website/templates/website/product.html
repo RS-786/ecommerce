@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block body %}
+{% if messages %}
+    {% for message in messages %}
+    <div>{{message}}</div>
+    {% endfor %}
+{% endif %}
     <!-- Page Add Section Begin -->
     <section class="page-add">
         <div class="container">
@@ -44,7 +49,7 @@
                         <div class="product-img">
                             <figure>
                                 <img src="static/img/product/{{object.title}}2.jpg" alt="">
-                                <div class="p-status">new</div>
+                                <div class="p-status {{object.get_status_display}}">{{object.get_status_display}}</div>
                             </figure>
                         </div>
                     </div>
