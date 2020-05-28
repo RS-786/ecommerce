@@ -5,45 +5,81 @@
     <!-- Header End -->
 
     <!-- Hero Slider Begin -->
-    <section class="hero-slider">
-        <div class="hero-items owl-carousel">
-            <div class="single-slider-item set-bg" data-setbg="{% static 'img/slider-1.jpg' %}">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h1>2019</h1>
-                            <h2>Lookbook.</h2>
-                            <a href="#" class="primary-btn">See More</a>
+<!--    <section class="hero-slider">-->
+<!--        <div class="hero-items owl-carousel">-->
+<!--            <div class="single-slider-item set-bg" data-setbg="{% static 'img/slider-1.jpg' %}">-->
+<!--                <div class="container">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-lg-12">-->
+<!--                            <h1>2019</h1>-->
+<!--                            <h2>Lookbook.</h2>-->
+<!--                            <a href="#" class="primary-btn">See More</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="single-slider-item set-bg" data-setbg="{% static 'img/slider-2.jpg' %}">-->
+<!--                <div class="container">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-lg-12">-->
+<!--                            <h1>2019</h1>-->
+<!--                            <h2>Lookbook.</h2>-->
+<!--                            <a href="#" class="primary-btn">See More</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="single-slider-item set-bg" data-setbg="{% static 'img/slider-3.jpg' %}">-->
+<!--                <div class="container">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-lg-12">-->
+<!--                            <h1>2019</h1>-->
+<!--                            <h2>Lookbook.</h2>-->
+<!--                            <a href="#" class="primary-btn">See More</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
+    <!-- Hero Slider End -->
+
+    <section class="latest-products spad">
+        <div class="container">
+            <div class="product-filter">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <div class="section-title">
+                            <h2>Latest Products</h2>
                         </div>
+                        <ul class="product-controls">
+                            <li data-filter="*">Foot Wear</li>
+                            <li data-filter=".dresses">Electronics</li>
+                            <li data-filter=".bags">Mens Wear</li>
+                            <li data-filter=".shoes">Womens Wear</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="single-slider-item set-bg" data-setbg="{% static 'img/slider-2.jpg' %}">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h1>2019</h1>
-                            <h2>Lookbook.</h2>
-                            <a href="#" class="primary-btn">See More</a>
+            <div class="row" id="product-list">
+                {% for item in object_list %}
+                <div class="col-lg-3 col-sm-6 mix all dresses bags">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="{{item.get_absolute_url}}"><img src="static/img/products/{{item.title}}1.jpg" alt=""></a>
+                            <div class="p-status {{item.get_status_display}}">{{item.get_status_display}}</div>
+                        </figure>
+                        <div class="product-text">
+                            <h6>{{item.title}}</h6>
+                            <p>${{item.price}}</p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="single-slider-item set-bg" data-setbg="{% static 'img/slider-3.jpg' %}">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <h1>2019</h1>
-                            <h2>Lookbook.</h2>
-                            <a href="#" class="primary-btn">See More</a>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
-    <!-- Hero Slider End -->
-
+    <!-- Latest Product End -->
     <!-- Features Section Begin -->
     <section class="features-section spad">
         <div class="features-ads">
@@ -122,43 +158,7 @@
     <!-- Features Section End -->
 
     <!-- Latest Product Begin -->
-    <section class="latest-products spad">
-        <div class="container">
-            <div class="product-filter">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <div class="section-title">
-                            <h2>Latest Products</h2>
-                        </div>
-                        <ul class="product-controls">
-                            <li data-filter="*">All</li>
-                            <li data-filter=".dresses">Dresses</li>
-                            <li data-filter=".bags">Bags</li>
-                            <li data-filter=".shoes">Shoes</li>
-                            <li data-filter=".accesories">Accesories</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="row" id="product-list">
-                {% for item in object_list %}
-                <div class="col-lg-3 col-sm-6 mix all dresses bags">
-                    <div class="single-product-item">
-                        <figure>
-                            <a href="{{item.get_absolute_url}}"><img src="static/img/products/{{item.title}}1.jpg" alt=""></a>
-                            <div class="p-status {{item.get_status_display}}">{{item.get_status_display}}</div>
-                        </figure>
-                        <div class="product-text">
-                            <h6>{{item.title}}</h6>
-                            <p>${{item.price}}</p>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    <!-- Latest Product End -->
+
 
     <!-- Lookbok Section Begin -->
     <section class="lookbok-section">

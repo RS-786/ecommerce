@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import Item,OrderItem,Order
 from django.views.generic import ListView, DetailView
 from django.utils import timezone
+from .templatetags.cart_template_tags import cart_item_count
 
 class IndexView(ListView):
     model = Item
@@ -43,7 +44,7 @@ def add_to_cart(request,slug):
         order = Order.objects.create(user=request.user,ordered_date=ordered_date)
         order.items.add(order_item)
         messages.info(request, "Item was added to your cart")
-    return redirect("product",slug=slug)
+    return redirect("shoppingcart")
 
 
 def remove_from_cart(request, slug):
