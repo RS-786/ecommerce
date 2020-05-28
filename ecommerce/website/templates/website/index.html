@@ -144,12 +144,14 @@
                 <div class="col-lg-3 col-sm-6 mix all dresses bags">
                     <div class="single-product-item">
                         <figure>
-                            <a href="#"><img src="{% static 'img/products/img-1.jpg' %}" alt=""></a>
-                            <div class="p-status">new</div>
+                            {% for item in object_list %}
+                            <a href="{{item.get_absolute_url}}"><img src="static/img/products/{{item.title}}1.jpg" alt=""></a>
+                            <div class="p-status {{item.get_status_display}}">new</div>
                         </figure>
                         <div class="product-text">
-                            <h6>Green Dress with details</h6>
-                            <p>$22.90</p>
+                            <h6>{{item.title}}</h6>
+                            <p>${{item.price}}</p>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

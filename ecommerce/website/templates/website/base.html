@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block head %}
+    {% endblock %}
     <meta charset="UTF-8">
     <meta name="description" content="Yoga Studio Template">
     <meta name="keywords" content="Yoga, unica, creative, html">
@@ -59,12 +61,12 @@
                 </div>
                 <nav class="main-menu mobile-menu">
                     <ul>
-                        <li><a href="index">Home</a></li>
-                        <li><a href="categories">Shop</a>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/categories">Shop</a>
                             <ul class="sub-menu">
-                                <li><a href="product-page">Product Page</a></li>
-                                <li><a href="shoppingcart">Shopping Card</a></li>
-                                <li><a href="checkout">Check out</a></li>
+                                <li><a href="/product">Product Page</a></li>
+                                <li><a href="/shoppingcart">Shopping Card</a></li>
+                                <li><a href="/checkout">Check out</a></li>
                             </ul>
                         </li>
                         <li><a href="product-page">About</a></li>

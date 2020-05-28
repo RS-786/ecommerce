@@ -1,4 +1,8 @@
-{% extends "website/base.html" %}
+{% extends "../website/base.html" %}
+
+{% block head %}
+<base href="../" target="_blank">
+{% endblock %}
 
 {% block body %}
     <!-- Page Add Section Begin -->
@@ -33,13 +37,13 @@
                     <div class="product-slider owl-carousel">
                         <div class="product-img">
                             <figure>
-                                <img src="static/img/product/product-1.jpg" alt="">
-                                <div class="p-status">new</div>
+                                <img src="static/img/product/{{object.title}}1.jpg" alt="">
+                                <div class="p-status {{object.get_status_display}}">new</div>
                             </figure>
                         </div>
                         <div class="product-img">
                             <figure>
-                                <img src="static/img/product/product-1.jpg" alt="">
+                                <img src="static/img/product/{{object.title}}2.jpg" alt="">
                                 <div class="p-status">new</div>
                             </figure>
                         </div>
@@ -48,9 +52,9 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="product-content">
-                        <h2>Dotted Blue Shirt</h2>
+                        <h2>{{object.title}}</h2>
                         <div class="pc-meta">
-                            <h5>$22.90</h5>
+                            <h5>{{object.price}}$</h5>
                             <div class="rating">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -59,19 +63,17 @@
                                 <i class="fa fa-star"></i>
                             </div>
                         </div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo
-                            viverra maecenas accumsan lacus vel facilisis.</p>
+                        <p>{{object.description}}</p>
                         <ul class="tags">
-                            <li><span>Category :</span> Men’s Wear</li>
-                            <li><span>Tags :</span> man, shirt, dotted, elegant, cool</li>
+                            <li><span>Category :</span> {{object.get_category_display}}</li>
+                            <li><span>Tags :</span> {% for tag in object.tags %}{{tag}} {% endfor %}</li>
                         </ul>
                         <div class="product-quantity">
                             <div class="pro-qty">
                                 <input type="text" value="1">
                             </div>
                         </div>
-                        <a href="#" class="primary-btn pc-btn">Add to cart</a>
+                        <a href="{{ object.get_add_to_cart_url }}" class="primary-btn pc-btn">Add to cart</a>
                         <ul class="p-info">
                             <li>Product Information</li>
                             <li>Reviews</li>
