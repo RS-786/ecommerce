@@ -1,8 +1,10 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib import messages
-from .models import Item,OrderItem,Order
-from django.views.generic import ListView, DetailView
+from .models import Item,OrderItem,Order,BillingAddress
+from .forms import CheckoutForm
+from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 from .templatetags.cart_template_tags import cart_item_count
 
 class IndexView(ListView):
@@ -16,6 +18,42 @@ class ProductView(DetailView):
 class ViewCart(ListView):
     model = OrderItem
     template_name = "website/shopping-cart.html"
+
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        form = CheckoutForm()
+        context = {
+            'form' : form
+        }
+        return render(self.request, "website/check-out.html", context)
+
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        try:
+            order = Order.objects.get(user = self.request.user,ordered=False)
+            if form.is_valid():
+                street_address = form.cleaned_data.get('street_address')
+                city = form.cleaned_data.get('city')
+                zip = form.cleaned_data.get('zip')
+                phone = form.cleaned_data.get('phone')
+                country = form.cleaned_data.get('country')
+                billing_address = BillingAddress(
+                    user=self.request.user,
+                    street_address=street_address,
+                    city=city,
+                    zip=zip,
+                    phone=phone,
+                    country=country
+                )
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+            return redirect('/')
+
+        except ObjectDoesNotExist:
+            return redirect('shoppingcart')
+
+
 
 def categories(request):
     return render(request,"website/categories.html")
