@@ -1,11 +1,13 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib import messages
-from .models import Item,OrderItem,Order,BillingAddress
+from .models import Item,OrderItem,Order,BillingAddress,Payment
 from .forms import CheckoutForm
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from .templatetags.cart_template_tags import cart_item_count
+import stripe
+stripe.api_key = "sk_test_foRP96MM4gujWqr8Ggnwf06i00HZt23taZ"
+P_key = "pk_test_tjoV1upnE5HnQ5PzoCAFbJoa00C2phujgW"
 
 class IndexView(ListView):
     model = Item
@@ -20,12 +22,13 @@ class ViewCart(ListView):
     template_name = "website/shopping-cart.html"
 
 class CheckoutView(View):
+
     def get(self, *args, **kwargs):
         form = CheckoutForm()
-        context = {
-            'form' : form
+        context={
+            'form':form
         }
-        return render(self.request, "website/check-out.html", context)
+        return render(self.request, "website/check-out.html",context)
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -37,22 +40,73 @@ class CheckoutView(View):
                 zip = form.cleaned_data.get('zip')
                 phone = form.cleaned_data.get('phone')
                 country = form.cleaned_data.get('country')
+                email = form.cleaned_data.get('email')
+
                 billing_address = BillingAddress(
                     user=self.request.user,
                     street_address=street_address,
                     city=city,
                     zip=zip,
                     phone=phone,
-                    country=country
+                    country=country,
+                    email = email
                 )
                 billing_address.save()
                 order.billing_address = billing_address
                 order.save()
-            return redirect('/')
+            return redirect('payment')
 
         except ObjectDoesNotExist:
             return redirect('shoppingcart')
 
+def Paymentfn(request):
+
+    order = Order.objects.get(user=request.user, ordered=False)
+    amount = int(order.get_total())
+    name = order.user.username
+    address = order.billing_address.street_address
+    email = order.billing_address.email
+    city = order.billing_address.city
+
+    if request.method == 'GET':
+        intent = stripe.PaymentIntent.create(
+            amount= amount * 100,
+            currency='inr',
+            payment_method_types=['card'],
+            description = "Test payment"
+        )
+        context = {
+            'Publishable_key': P_key,
+            'customer_email': email,
+            'intent_id': intent.id,
+            'customer_address' : address,
+            'customer_name' : name,
+            'city' : city
+        }
+        return render(request, "website/payment.html",context)
+
+    if request.method == 'POST':
+        intent_id = request.POST['intent_id']
+        payment_method_id = request.POST['payment_method_id']
+        stripe.api_key = "sk_test_foRP96MM4gujWqr8Ggnwf06i00HZt23taZ"
+        stripe.PaymentIntent.modify(
+            intent_id,
+            payment_method = payment_method_id
+        )
+        stripe.PaymentIntent.confirm(intent_id)
+        # create payment
+        payment = Payment()
+        payment.stripe_charge_id = intent_id
+        payment.user = request.user
+        payment.amount = amount
+        payment.save()
+        # assign payment to order
+        order.ordered = True
+        order.payment = payment
+        order.save()
+
+        messages.success(request, "Your order was placed successfully")
+        return redirect("/")
 
 
 def categories(request):

@@ -10,5 +10,6 @@ urlpatterns = [
     path('checkout',views.CheckoutView.as_view(),name="checkout"),
     path('contact',views.contact,name="contact"),
     path('add-to-cart/<slug>',views.add_to_cart,name="add-to-cart"),
-    path('remove-from-cart/<slug>',views.remove_from_cart,name ="remove-from-cart")
+    path('remove-from-cart/<slug>',views.remove_from_cart,name ="remove-from-cart"),
+    path('payment/',views.Paymentfn,name="payment")
 ]

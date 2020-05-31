@@ -15,3 +15,4 @@ class CheckoutForm(forms.Form):
     phone = forms.CharField()
     ship_to_different_address = forms.BooleanField(widget=forms.CheckboxInput())
     payment_method =forms.ChoiceField(widget=forms.RadioSelect(),choices=PAYMENT_CHOICES)
+    email = forms.CharField()

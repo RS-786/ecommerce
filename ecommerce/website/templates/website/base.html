@@ -12,7 +12,6 @@
     <title>{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
     {% endblock %}
-
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900&display=swap"
@@ -38,6 +37,7 @@
     </style>
 </head>
 <body>
+
 <div id="preloder">
         <div class="loader"></div>
     </div>
@@ -54,6 +54,13 @@
 	<!-- Search model end -->
 
     <!-- Header Section Begin -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <header class="header-section">
         <div class="container-fluid">
             <div class="inner-header">

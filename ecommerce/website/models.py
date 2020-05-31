@@ -56,6 +56,9 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.item.title} x {self.quantity}"
 
+    def get_total_price(self):
+        return self.quantity * self.item.price
+
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
@@ -64,6 +67,13 @@ class Order(models.Model):
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     billing_address = models.ForeignKey('BillingAddress',on_delete=models.SET_NULL,blank=True,null=True)
+    payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
+
+    def get_total(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.get_total_price()
+        return total
 
     def __str__(self):
         return self.user.username
@@ -75,6 +85,16 @@ class BillingAddress(models.Model):
     zip = models.CharField(max_length=10)
     phone = models.CharField(max_length=15)
     country = CountryField(multiple=False)
+    email = models.CharField(max_length=64)
 
     def __str__(self):
         return f'{self.user.username},{self.city}'
+
+class Payment(models.Model):
+    stripe_charge_id = models.CharField(max_length=50)
+    user  =  models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.SET_NULL,blank=True,null=True)
+    amount = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
