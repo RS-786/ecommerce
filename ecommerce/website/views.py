@@ -9,6 +9,7 @@ import stripe
 stripe.api_key = "sk_test_foRP96MM4gujWqr8Ggnwf06i00HZt23taZ"
 P_key = "pk_test_tjoV1upnE5HnQ5PzoCAFbJoa00C2phujgW"
 
+
 class IndexView(ListView):
     model = Item
     template_name = "website/index.html"
@@ -17,9 +18,15 @@ class ProductView(DetailView):
     model = Item
     template_name = "website/product.html"
 
-class ViewCart(ListView):
-    model = OrderItem
-    template_name = "website/shopping-cart.html"
+def ViewCart(request,slug):
+    order = Order.objects.get(slug = slug)
+    items = order.items.all()
+    context ={
+        'object' : order,
+        'items' : items
+    }
+    return render(request,"website/shopping-cart.html",context)
+
 
 class CheckoutView(View):
 
@@ -133,10 +140,11 @@ def add_to_cart(request,slug):
             order.items.add(order_item)
     else:
         ordered_date = timezone.now()
-        order = Order.objects.create(user=request.user,ordered_date=ordered_date)
-        order.items.add(order_item)
+        order = Order.objects.create(user=request.user,ordered_date=ordered_date,slug=request.user.username)
+        order.items.add(order_item)     
         messages.info(request, "Item was added to your cart")
-    return redirect("shoppingcart")
+
+    return redirect("/")
 
 
 def remove_from_cart(request, slug):

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% load cart_template_tags %}
+    {% load order_tag %}
     {% block head %}
     {% endblock %}
     <meta charset="UTF-8">
@@ -94,7 +95,7 @@
                         <li><a href="/">Home</a></li>
                         <li><a href="/categories">Shop</a>
                         {% if user.is_authenticated %}
-                        <li><a href="/shoppingcart">Cart <i class="fas fa-shopping-cart"></i>
+                        <li><a href="{{request.user|cart_url}}">Cart <i class="fas fa-shopping-cart"></i>
                         <i class="red">{{request.user|cart_item_count}}</i></a></li>
                         {% endif %}
                         <li><a href="/contact">Contact</a></li>

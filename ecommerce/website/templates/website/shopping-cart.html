@@ -1,5 +1,7 @@
 {% extends "website/base.html" %}
-
+{% block head %}
+<base href="../" target="_blank">
+{% endblock %}
 {% block body %}
 <!-- Page Preloder -->
     <!-- Page Add Section Begin -->
@@ -26,7 +28,7 @@
     <div class="cart-page">
         <div class="container">
             <div class="cart-table">
-                {% if object_list %}
+                {% if object %}
                 <table>
                     <thead>
                         <tr>
@@ -38,7 +40,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for item in object_list %}
+                    {% for item in items %}
                         <tr>
                             <td class="product-col">
                                 <img src="static/img/product/{{item.item.title}}1.jpg" alt="">
@@ -50,7 +52,7 @@
                             <td class="quantity-col">
                                 <div>{{item.quantity}}</div>
                             </td>
-                            <td class="total">&#x20B9;{{item.item.price}}</td>
+                            <td class="total">&#x20B9;{% widthratio item.item.price 1 item.quantity%}</td>
                             <td class="product-close">
                                 <a href="{{item.item.get_remove_from_cart_url}}"><i class="fas fa-trash red"></i></a></td>
                         </tr>
@@ -82,13 +84,13 @@
                                     <input type="radio" name="cs" id="one">
                                     <label for="one" class="active">
                                         Free Standard shhipping
-                                        <span>Estimate for New York</span>
+                                        <span>Estimate for New Delhi</span>
                                     </label>
                                 </div>
                                 <div class="cs-item">
                                     <input type="radio" name="cs" id="two">
                                     <label for="two">
-                                        Next Day delievery $10
+                                        Next Day delivery $10
                                     </label>
                                 </div>
                                 <div class="cs-item last">
@@ -104,25 +106,24 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Total</th>
-                                            <th>Subtotal</th>
-                                            <th>Shipping</th>
+                                            <th>Total {{object.get_total}}</th>
+                                            <th>Shipping {% widthratio object.get_total 20 1 %} </th>
                                             <th class="total-cart">Total Cart</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="total">$29</td>
-                                            <td class="sub-total">$29</td>
-                                            <td class="shipping">$10</td>
-                                            <td class="total-cart-p">$39</td>
+                                            <td class="total"></td>
+                                            <td class="sub-total"></td>
+                                            <td class="shipping"></td>
+                                            <td class="total-cart-p"></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 text-right">
-                                    <a href="/checkout" class="primary-btn chechout-btn">Proceed to checkout</a>
+                                    <a href="/checkout" class="primary-btn checkout-btn">Proceed to checkout</a>
                                 </div>
                             </div>
                         </div>

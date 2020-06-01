@@ -68,6 +68,12 @@ class Order(models.Model):
     ordered = models.BooleanField(default=False)
     billing_address = models.ForeignKey('BillingAddress',on_delete=models.SET_NULL,blank=True,null=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
+    slug = models.SlugField()
+
+    def get_cart_url(self):
+        return reverse("shoppingcart", kwargs={
+            'slug': self.slug
+        })
 
     def get_total(self):
         total = 0
