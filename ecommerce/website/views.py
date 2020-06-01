@@ -32,8 +32,16 @@ class CheckoutView(View):
 
     def get(self, *args, **kwargs):
         form = CheckoutForm()
+        order = Order.objects.get(user=self.request.user,ordered=False)
+        items = order.items.all()
+        total = order.get_total()
+        qty = order.items.count()
+
         context={
-            'form':form
+            'form':form,
+            'items':items,
+            'total':total,
+            'qty': qty
         }
         return render(self.request, "website/check-out.html",context)
 
@@ -141,7 +149,7 @@ def add_to_cart(request,slug):
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(user=request.user,ordered_date=ordered_date,slug=request.user.username)
-        order.items.add(order_item)     
+        order.items.add(order_item)
         messages.info(request, "Item was added to your cart")
 
     return redirect("/")

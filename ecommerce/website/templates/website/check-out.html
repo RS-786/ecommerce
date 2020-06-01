@@ -36,25 +36,29 @@
                 <div class="col-3">
                     <div class="jumbotron text-center">
                             <div class="cart-item">
-                                <span>Product</span>
-                                <p class="product-name">Blue Dotted Shirt</p>
+                                <span>Product(s)</span>
+                                {% for item in items %}
+                                <p class="product-name">{{item.item.title}}</p>
+                                {% endfor %}
                             </div>
                             <div class="cart-item">
                                 <span>Price</span>
-                                <p>$29</p>
+                                {% for item in items %}
+                                <p>&#x20B9;{{total}}</p>
+                                {% endfor %}
                             </div>
                             <div class="cart-item">
                                 <span>Quantity</span>
-                                <p>1</p>
+                                <p>{{qty}}</p>
                             </div>
                             <div class="cart-item">
                                 <span>Shipping</span>
-                                <p>$10</p>
+                                <p>FREE</p>
                             </div>
 
                             <div class="cart-total">
                                 <span>Total</span>
-                                <p>$39</p>
+                                <p>&#x20B9;{{total}}</p>
                             </div>
                         </div>
                     </div>
