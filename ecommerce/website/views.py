@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib import messages
-from .models import Item,OrderItem,Order,BillingAddress,Payment
+from .models import Item,OrderItem,Order,BillingAddress,Payment,DiscountCode
 from .forms import CheckoutForm
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
@@ -19,13 +19,25 @@ class ProductView(DetailView):
     template_name = "website/product.html"
 
 def ViewCart(request,slug):
-    order = Order.objects.get(slug = slug)
+
+    order = Order.objects.get(slug=slug)
     items = order.items.all()
-    context ={
-        'object' : order,
-        'items' : items
-    }
-    return render(request,"website/shopping-cart.html",context)
+    if request.method == "GET":
+        context ={
+            'object' : order,
+            'items' : items
+        }
+        return render(request, "website/shopping-cart.html", context)
+
+    elif request.method == "POST":
+        code = request.POST['code']
+        discount_code = DiscountCode.objects.get(code = code)
+        order.dis_code = discount_code
+        context = {
+            'object': order,
+            'items': items
+        }
+        return render(request, "website/shopping-cart.html",context)
 
 
 class CheckoutView(View):
@@ -56,6 +68,7 @@ class CheckoutView(View):
                 phone = form.cleaned_data.get('phone')
                 country = form.cleaned_data.get('country')
                 email = form.cleaned_data.get('email')
+                payment_method = form.cleaned_data.get('payment_method')
 
                 billing_address = BillingAddress(
                     user=self.request.user,
@@ -69,12 +82,18 @@ class CheckoutView(View):
                 billing_address.save()
                 order.billing_address = billing_address
                 order.save()
-            return redirect('payment')
+                if payment_method == 'C':
+                    return redirect('payment', payment_option = 'card')
+                elif payment_method == 'P':
+                    return redirect('payment', payment_option = 'PayPal')
+                else:
+                    messages.warning(self.request,"Failed Checkout")
+                    return redirect('checkout')
 
         except ObjectDoesNotExist:
             return redirect('shoppingcart')
 
-def Paymentfn(request):
+def Paymentfn(request, payment_option = 'card'):
 
     order = Order.objects.get(user=request.user, ordered=False)
     amount = int(order.get_total())
@@ -82,31 +101,32 @@ def Paymentfn(request):
     address = order.billing_address.street_address
     email = order.billing_address.email
     city = order.billing_address.city
+    payment_option = payment_option
 
     if request.method == 'GET':
         intent = stripe.PaymentIntent.create(
-            amount= amount * 100,
+            amount=amount * 100,
             currency='inr',
             payment_method_types=['card'],
-            description = "Test payment"
+            description="Test payment"
         )
         context = {
             'Publishable_key': P_key,
             'customer_email': email,
             'intent_id': intent.id,
-            'customer_address' : address,
-            'customer_name' : name,
-            'city' : city
+            'customer_address': address,
+            'customer_name': name,
+            'city': city
         }
-        return render(request, "website/payment.html",context)
+        return render(request, "website/payment.html", context)
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         intent_id = request.POST['intent_id']
         payment_method_id = request.POST['payment_method_id']
         stripe.api_key = "sk_test_foRP96MM4gujWqr8Ggnwf06i00HZt23taZ"
         stripe.PaymentIntent.modify(
             intent_id,
-            payment_method = payment_method_id
+            payment_method=payment_method_id
         )
         stripe.PaymentIntent.confirm(intent_id)
         # create payment
@@ -122,6 +142,8 @@ def Paymentfn(request):
 
         messages.success(request, "Your order was placed successfully")
         return redirect("/")
+
+
 
 
 def categories(request):

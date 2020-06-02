@@ -69,6 +69,7 @@ class Order(models.Model):
     billing_address = models.ForeignKey('BillingAddress',on_delete=models.SET_NULL,blank=True,null=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
     slug = models.SlugField()
+    dis_code = models.ForeignKey('DiscountCode',on_delete=models.SET_NULL,blank=True,null=True)
 
     def get_cart_url(self):
         return reverse("shoppingcart", kwargs={
@@ -79,6 +80,12 @@ class Order(models.Model):
         total = 0
         for order_item in self.items.all():
             total += order_item.get_total_price()
+        if self.dis_code:
+            cut = 0
+            for order_item in self.items.all():
+                if order_item.item.category == self.dis_code.category:
+                    cut = cut + (order_item.get_total_price() * ((self.dis_code.discount)/100))
+            total = total - cut
         return total
 
     def __str__(self):
@@ -104,3 +111,11 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class DiscountCode(models.Model):
+    code = models.CharField(max_length=10)
+    category = models.CharField(choices=CATEGORY_CHOICES,max_length=2)
+    discount = models.IntegerField()
+
+    def __str__(self):
+        return self.code

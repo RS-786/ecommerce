@@ -25,7 +25,6 @@
     <!-- Page Add Section End -->
 
     <!-- Cart Page Section Begin -->
-    <div class="cart-page">
         <div class="container">
             <div class="cart-table">
                 {% if object %}
@@ -60,19 +59,31 @@
                     </tbody>
                 </table>
             </div>
+            {% if object.dis_code is NULL %}
             <div class="cart-btn">
+                <form action ="shoppingcart/{{user.username}}" method="POST">
                 <div class="row">
                     <div class="col-lg-6">
+                            {% csrf_token %}
                         <div class="coupon-input">
-                            <input type="text" placeholder="Enter coupon code">
+                            <input name="code" type="text" placeholder="Enter coupon code">
                         </div>
                     </div>
                     <div class="col-lg-5 offset-lg-1 text-left text-lg-right">
-                        <div class="site-btn update-btn"><a href="/">Continue Shopping</a></div>
+                        <button class="site-btn update-btn" type="submit">Apply Discount Code</button>
                     </div>
                 </div>
+                    </form>
             </div>
-        </div>
+            {% else %}
+            <div class="cart-btn">
+                <div class="row">
+                    <div class="col-lg-6">
+                  <div class="text-center">Discount code applied  <i class="far fa-check-circle"></i></div>
+                </div>
+            </div>
+            </div>
+            {% endif %}
         <div class="shopping-method">
             <div class="container">
                 <div class="row">
@@ -106,8 +117,8 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Total {{object.get_total}}</th>
-                                            <th>Shipping {% widthratio object.get_total 20 1 %} </th>
+                                            <th>Total &#x20B9; {{object.get_total}}</th>
+                                            <th>Shipping &#x20B9; {% widthratio object.get_total 20 1 %} </th>
                                             <th class="total-cart">Total Cart</th>
                                         </tr>
                                     </thead>

@@ -102,7 +102,7 @@ label {
 <div class="container">
     <div class="row">
     <div class="col-12">
-  <form action="{% url 'payment' %}" method="POST" id="stripe-form">
+  <form action="{% url 'payment' 'card' %}" method="POST" id="stripe-form">
       {% csrf_token %}
     <div class="stripe-form-row">
       <label for="card-element" id="stripebtnlabel">
