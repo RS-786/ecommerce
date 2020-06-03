@@ -1,0 +1,28 @@
+{% extends "website/base.html" %}
+{% block head %}
+<base href="../" target="_blank">
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="page-header text-center">
+<h2>'{{tag}}'  PRODUCTS:</h2>
+</div>
+        <br>
+    <div class="row" id="product-list">
+                {% for item in items %}
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="{{item.get_absolute_url}}"><img src="static/img/products/{{item.title}}1.jpg" alt=""></a>
+                            <div class="p-status {{item.get_status_display}}">{{item.get_status_display}}</div>
+                        </figure>
+                        <div class="product-text">
+                            <h6>{{item.title}}</h6>
+                            <p>&#x20B9; {{item.price}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+</div>
+{% endblock %}

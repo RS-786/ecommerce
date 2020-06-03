@@ -66,7 +66,8 @@
                         <p>{{object.description}}</p>
                         <ul class="tags">
                             <li><span>Category :</span> {{object.get_category_display}}</li>
-                            <li><span>Tags :</span> {% for tag in object.tags %}{{tag}} {% endfor %}</li>
+                            <li><span>Tags :</span>{% for tag in object.tags %}
+                                <button class="btn btn-link btn-sm" onclick= location.href="search/{{tag}}">{{tag}}</button>{% endfor %}</li>
                         </ul>
                         <div class="product-quantity">
                             <div class="pro-qty">

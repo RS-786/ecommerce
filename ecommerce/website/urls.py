@@ -11,5 +11,6 @@ urlpatterns = [
     path('contact',views.contact,name="contact"),
     path('add-to-cart/<slug>',views.add_to_cart,name="add-to-cart"),
     path('remove-from-cart/<slug>',views.remove_from_cart,name ="remove-from-cart"),
-    path('payment/<str:payment_option>',views.Paymentfn,name="payment")
+    path('payment/<str:payment_option>',views.Paymentfn,name="payment"),
+    path('search/<str:tag>',views.search,name="search")
 ]

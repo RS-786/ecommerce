@@ -5,6 +5,7 @@ from .forms import CheckoutForm
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
+import django_mysql.models.lookups
 import stripe
 stripe.api_key = "sk_test_foRP96MM4gujWqr8Ggnwf06i00HZt23taZ"
 P_key = "pk_test_tjoV1upnE5HnQ5PzoCAFbJoa00C2phujgW"
@@ -184,3 +185,16 @@ def remove_from_cart(request, slug):
     messages.info(request, "Item removed from cart!")
 
     return redirect("shoppingcart")
+
+def search(request, tag):
+    items = Item.objects.all()
+    ITEMS = []
+    for item in items:
+        tag_list = item.tags
+        if tag in tag_list:
+            ITEMS.append(item)
+    context = {
+        'items' : ITEMS,
+        'tag':tag
+    }
+    return render(request,"website/search.html",context)
